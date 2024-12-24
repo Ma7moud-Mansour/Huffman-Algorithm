@@ -1,0 +1,3 @@
+﻿  Hofman_Project.cpp
+D:\Computer Sience\DataStructure\Hofman_Project\Hofman_Project\Hofman_Project.cpp(134,1): warning C4326: return type of 'main' should be 'int' instead of 'void'
+  Hofman_Project.vcxproj -> D:\Computer Sience\DataStructure\Hofman_Project\x64\Debug\Hofman_Project.exe
