@@ -112,7 +112,6 @@ public:
         display2(ptrav->pRight, code+"1");
     }
 
-
     //DISPLAY BINARY CODE
     void displayCode(cNode* ptrav)
     {
@@ -128,11 +127,38 @@ public:
         displayCode(ptrav->pLeft);
         displayCode(ptrav->pRight);
     }
+
+    void CodeList(cNode* ptrav, cList &COD)
+    {
+        if (ptrav == NULL)
+        {
+            return;
+        }
+        if (ptrav->pRight == NULL && ptrav->pLeft == NULL)
+        {
+            cNode* pnn = new cNode;
+            pnn->charr = ptrav->charr;
+            pnn->Code = ptrav->Code;
+            COD.attach(pnn);
+        }
+
+        CodeList(ptrav->pLeft, COD);
+        CodeList(ptrav->pRight, COD);
+    }
+
+    void DisplayCodeList(cNode* ptrav)
+    {
+        while (ptrav != NULL)
+        {
+            cout << ptrav->charr << ',' << ptrav->Code << endl;
+            ptrav = ptrav->pNext;
+        }
+    }
 };
 
 void main()
 {
-    cList List;
+    cList List, COD;
     string file = "file.txt";
     string line;
     char L[256], Ct[256];
@@ -208,4 +234,72 @@ void main()
     List.displayCode(List.pHead);
     cout << "==============================================================" << endl;
     cout << "THANK YOU FOR YOUR TIME \nAND SPECIAL THANKS TO OUR PROFFESOR DR/AHMED FAROUK \nBY MAHMOUD ABDELKAREEM ";
+//================================================END OF PHASE ONE====================================================
+// 
+//====================================================PHASE #2========================================================
+
+    //Create List For Every Letter And His Code
+    List.CodeList(List.pHead, COD);
+    
+    /*
+    ===================================================
+    ==================COMPERSSION======================
+    ===================================================
+    */
+
+    //HASHING
+    string cd, Hash;
+    char temp;
+    int count = 7;
+    ifstream inFile(file);
+    if (inFile.is_open())
+    {
+        while (getline(inFile, line))
+        {
+            for (int k = 0; k < line.length(); k++)
+            {
+                cNode* ptrav;
+                ptrav = COD.pHead;
+                while (ptrav != NULL)
+                {
+                    if (ptrav->charr == line[k])
+                    {
+                        cd = ptrav->Code;
+                        break;
+                    }
+                    ptrav = ptrav->pNext;
+                }
+                for (int i = 0; i < cd.length(); i++)
+                {
+                    if (cd[i] == '1')
+                    {
+                        temp = temp | 1 << count;
+                    }
+                    count--;
+                    if (count < 0)
+                    {
+                        count = 7;
+                        Hash += temp;
+                        temp = 0;
+                    }
+                }
+            }
+            if (count < 7)
+            {
+                Hash += temp;
+            }
+        }
+        Hash += '\n';
+    }
+    else { cout << "Error: Could not open file " << file << endl; }
+
+    ofstream MyFile("Hash.txt");
+    if (MyFile.is_open())
+    {
+        MyFile << Hash;
+    }
+    else { cout << "Error: Could not open file " << file << endl; }
+    // END OF HASHING
+
+
 }
