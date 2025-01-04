@@ -198,6 +198,7 @@ void main()
         //===============
         ct=0;
         Letter++;
+        inFile.close();
     }
     List.display();
     //--------FINISHED-----------
@@ -273,7 +274,7 @@ void main()
                 {
                     if (cd[i] == '1')
                     {
-                        temp = temp | 1 << count;
+                        temp = temp | (1 << count);
                     }
                     count--;
                     if (count < 0)
@@ -283,11 +284,14 @@ void main()
                         temp = 0;
                     }
                 }
+            cout << "Character: " << line[k] << " -> Code: " << cd << endl;
             }
             if (count < 7)
             {
                 Hash += temp;
+                temp = 0;
             }
+
         }
         Hash += '\n';
     }
@@ -297,9 +301,47 @@ void main()
     if (MyFile.is_open())
     {
         MyFile << Hash;
+        MyFile.close();
     }
     else { cout << "Error: Could not open file " << file << endl; }
     // END OF HASHING
 
+    /*
+    ===================================================
+    =================DeCOMPERSSION=====================
+    ===================================================
+    */
 
+    string temp2;
+
+    ofstream DC("DC.txt");
+
+    ifstream HashFile("Hash.txt");
+    if (HashFile.is_open())
+    {
+        while (getline(HashFile, line))
+        {
+            for (int i = 0; i < line.length(); i++)
+            {
+                for (int k = 7; k >= 0; k--)
+                {
+                    temp2 += ((line[i] & (1 << k)) ? '1' : '0');
+
+                    cNode* ptrav;
+                    ptrav = COD.pHead;
+                    while (ptrav != NULL)
+                    {
+                        if (temp2 == ptrav->Code)
+                        {
+                            DC << ptrav->charr;
+                            temp2 = "";
+                            break;
+                        }
+                        ptrav = ptrav->pNext;
+                    }
+                }
+            }
+            DC << endl;
+        }
+    }
 }
