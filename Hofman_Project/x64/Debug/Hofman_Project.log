@@ -1,3 +1,6 @@
 ﻿  Hofman_Project.cpp
 D:\Computer Sience\DataStructure\Hofman_Project\Huffman-Algorithm\Hofman_Project\Hofman_Project.cpp(160,1): warning C4326: return type of 'main' should be 'int' instead of 'void'
+D:\Computer Sience\DataStructure\Hofman_Project\Huffman-Algorithm\Hofman_Project\Hofman_Project.cpp(268,15): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+D:\Computer Sience\DataStructure\Hofman_Project\Huffman-Algorithm\Hofman_Project\Hofman_Project.cpp(349,15): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+D:\Computer Sience\DataStructure\Hofman_Project\Huffman-Algorithm\Hofman_Project\Hofman_Project.cpp(263,9): warning C4101: 'Bitt': unreferenced local variable
   Hofman_Project.vcxproj -> D:\Computer Sience\DataStructure\Hofman_Project\Huffman-Algorithm\x64\Debug\Hofman_Project.exe

@@ -6,27 +6,27 @@ using namespace std;
 class cNode
 {
 public:
-	int val;
+    int val;
     char charr;
     string Code;
-	cNode* pRight;
-	cNode* pLeft;
-	cNode* pNext;
-	
-	cNode()
-	{
-		val = 0;
-		pRight = NULL;
-		pLeft = NULL;
-		pNext = NULL;
-	}
+    cNode* pRight;
+    cNode* pLeft;
+    cNode* pNext;
+
+    cNode()
+    {
+        val = 0;
+        pRight = NULL;
+        pLeft = NULL;
+        pNext = NULL;
+    }
 };
 
 class cList
 {
 public:
-	cNode* pHead;
-	cNode* pTail;
+    cNode* pHead;
+    cNode* pTail;
 
     cList()
     {
@@ -72,10 +72,10 @@ public:
             cout << temp->val << "" << temp->charr << " ";
             temp = temp->pNext;
         }
-        cout << endl << "=============================================================="<< endl;
+        cout << endl << "==============================================================" << endl;
     }
     cNode* popfirst()
-    {  
+    {
         cNode* pTemp;
         pTemp = pHead;
         pHead = pHead->pNext;
@@ -108,8 +108,8 @@ public:
             return;
         }
         ptrav->Code = code;
-        display2(ptrav->pLeft, code+"0");
-        display2(ptrav->pRight, code+"1");
+        display2(ptrav->pLeft, code + "0");
+        display2(ptrav->pRight, code + "1");
     }
 
     //DISPLAY BINARY CODE
@@ -123,12 +123,12 @@ public:
         {
             cout << ptrav->charr << "->" << ptrav->Code << endl;
         }
-        
+
         displayCode(ptrav->pLeft);
         displayCode(ptrav->pRight);
     }
 
-    void CodeList(cNode* ptrav, cList &COD)
+    void CodeList(cNode* ptrav, cList& COD)
     {
         if (ptrav == NULL)
         {
@@ -173,9 +173,10 @@ void main()
     {
         L[i] = Letter;
         ifstream inFile(file);
-        if (inFile.is_open()) 
+        if (inFile.is_open())
         {
-            while (getline(inFile, line)) 
+            int m = 0;
+            while (getline(inFile, line))
             {
                 for (int k = 0; k < line.length(); k++)
                 {
@@ -184,9 +185,14 @@ void main()
                         ct++;
                     }
                 }
+                m++;
+            }
+            if (i == 10)
+            {
+                ct = m - 1;
             }
         }
-        else{ cout << "Error: Could not open file " << file << endl;}
+        else { cout << "Error: Could not open file " << file << endl; }
         Ct[i] = ct;
         if (ct != 0)
         {
@@ -196,7 +202,7 @@ void main()
             List.attach(pnn);
         }
         //===============
-        ct=0;
+        ct = 0;
         Letter++;
         inFile.close();
     }
@@ -235,13 +241,13 @@ void main()
     List.displayCode(List.pHead);
     cout << "==============================================================" << endl;
     cout << "THANK YOU FOR YOUR TIME \nAND SPECIAL THANKS TO OUR PROFFESOR DR/AHMED FAROUK \nBY MAHMOUD ABDELKAREEM ";
-//================================================END OF PHASE ONE====================================================
-// 
-//====================================================PHASE #2========================================================
+    //================================================END OF PHASE ONE====================================================
+    // 
+    //====================================================PHASE #2========================================================
 
-    //Create List For Every Letter And His Code
+        //Create List For Every Letter And His Code
     List.CodeList(List.pHead, COD);
-    
+
     /*
     ===================================================
     ==================COMPERSSION======================
@@ -249,51 +255,55 @@ void main()
     */
 
     //HASHING
+
     string cd, Hash;
-    char temp;
+    int temp = 0;
     int count = 7;
-    ifstream inFile(file);
+    int cnt = 0;
+    int Bitt;
+    ifstream inFile(file, ios::binary);
     if (inFile.is_open())
     {
-        while (getline(inFile, line))
+        inFile.seekg(0, inFile.end);
+        int h = inFile.tellg();
+        cout << h;
+        inFile.seekg(0, inFile.beg);
+        char ch;
+        for (int i = 0; i < h; i++)
         {
-            for (int k = 0; k < line.length(); k++)
+            inFile.read(&ch, 1);
+            cNode* ptrav;
+            ptrav = COD.pHead;
+            while (ptrav != NULL)
             {
-                cNode* ptrav;
-                ptrav = COD.pHead;
-                while (ptrav != NULL)
+                if (ptrav->charr == ch)
                 {
-                    if (ptrav->charr == line[k])
-                    {
-                        cd = ptrav->Code;
-                        break;
-                    }
-                    ptrav = ptrav->pNext;
+                    cd = ptrav->Code;
+                    break;
                 }
-                for (int i = 0; i < cd.length(); i++)
-                {
-                    if (cd[i] == '1')
-                    {
-                        temp = temp | (1 << count);
-                    }
-                    count--;
-                    if (count < 0)
-                    {
-                        count = 7;
-                        Hash += temp;
-                        temp = 0;
-                    }
-                }
-            cout << "Character: " << line[k] << " -> Code: " << cd << endl;
+                ptrav = ptrav->pNext;
             }
-            if (count < 7)
+            for (int i = 0; i < cd.length(); i++)
             {
-                Hash += temp;
-                temp = 0;
+                if (cd[i] == '1')
+                {
+                    temp = temp | (1 << count);
+                }
+                count--;
+                if (count < 0)
+                {
+                    count = 7;
+                    Hash += temp;
+                    temp = 0;
+                }
             }
-
+            cd.clear();
         }
-        Hash += '\n';
+        if (count != 7)
+        {
+            Hash += temp;
+        }
+        Hash += (7 - count);
     }
     else { cout << "Error: Could not open file " << file << endl; }
 
@@ -311,37 +321,74 @@ void main()
     =================DeCOMPERSSION=====================
     ===================================================
     */
-
     string temp2;
-
+    int cut = 0;
+    ifstream inFilee(file);
+    if (inFilee.is_open())
+    {
+        int i = 0;
+        while (getline(inFilee, line))
+        {
+            if (i != 0)
+            {
+                cut++;
+            }
+            for (int k = 0; k < line.length(); k++)
+            {
+                cut++;
+            }
+            cut++;
+        }
+    }
     ofstream DC("DC.txt");
-
-    ifstream HashFile("Hash.txt");
+    int ctt = 0;
+    ifstream HashFile("Hash.txt", ios::binary);
     if (HashFile.is_open())
     {
-        while (getline(HashFile, line))
+        HashFile.seekg(0, HashFile.end);
+        int h = HashFile.tellg();
+        HashFile.seekg(0, HashFile.beg);
+        char ch;
+        char x;
+        for (int i = 0; i < h; i++)
         {
-            for (int i = 0; i < line.length(); i++)
+            HashFile.read(&ch, 1);
+            ct = 8;
+            if (i == h - 2)
             {
-                for (int k = 7; k >= 0; k--)
+                HashFile.read(&x, 1);
+                unsigned char a = x;
+                ct = int(a);
+            }
+            for (int k = 7; k >= 0 && ct > 0; k--, ct--)
+            {
+                if ((ch & (1 << k)) != 0)
                 {
-                    temp2 += ((line[i] & (1 << k)) ? '1' : '0');
-
-                    cNode* ptrav;
-                    ptrav = COD.pHead;
-                    while (ptrav != NULL)
+                    temp2 += '1';
+                }
+                else
+                {
+                    temp2 += '0';
+                }
+                cNode* ptrav;
+                ptrav = COD.pHead;
+                while (ptrav != NULL)
+                {
+                    if (temp2 == ptrav->Code && ctt <= cut)
                     {
-                        if (temp2 == ptrav->Code)
-                        {
-                            DC << ptrav->charr;
-                            temp2 = "";
-                            break;
-                        }
-                        ptrav = ptrav->pNext;
+                        DC << ptrav->charr;
+                        temp2 = "";
+                        ctt++;
+                        break;
                     }
+                    ptrav = ptrav->pNext;
                 }
             }
-            DC << endl;
+            if (i == h - 2)
+            {
+                break;
+            }
         }
+        DC << endl;
     }
 }
