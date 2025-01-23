@@ -155,11 +155,20 @@ public:
         }
     }
 };
-
+int isfound(char c, cList& L) {
+    cNode* ptrav = L.pHead;
+    while (ptrav != NULL) {
+        if (ptrav->charr == c) {
+            return 1;
+        }
+        ptrav = ptrav->pNext;
+    }
+    return 0;
+}
 void main()
 {
     cList List, COD;
-    string file = "file.txt";
+    string file = "Trail.bmp";
     string line;
     char L[256], Ct[256];
     char Letter = 0;
@@ -169,43 +178,40 @@ void main()
     ===========READ FILE AND COUNT LETTERS=============
     ===================================================
     */
-    for (int i = 0; i < 256; i++)
+    ifstream inFile(file, ifstream::binary);
+    if (inFile.is_open())
     {
-        L[i] = Letter;
-        ifstream inFile(file);
-        if (inFile.is_open())
+        int m = 0;
+        char c;
+        inFile.seekg(0, inFile.end);
+        int h = inFile.tellg();
+        inFile.seekg(0, inFile.beg);
+        for (int i = 0; i < h; i++)
         {
-            int m = 0;
-            while (getline(inFile, line))
+            inFile.read(&c, 1);
+            if (isfound(c, List))
             {
-                for (int k = 0; k < line.length(); k++)
+                cNode* ptrav = List.pHead;
+                while (ptrav != NULL)
                 {
-                    if (Letter == line[k])
+                    if (ptrav->charr == c)
                     {
-                        ct++;
+                        ptrav->val++;
                     }
+                    ptrav = ptrav->pNext;
                 }
-                m++;
             }
-            if (i == 10)
+            else
             {
-                ct = m - 1;
+                cNode* pnn = new cNode;
+                pnn->val = 1;
+                pnn->charr = c;
+                List.attach(pnn);
             }
         }
-        else { cout << "Error: Could not open file " << file << endl; }
-        Ct[i] = ct;
-        if (ct != 0)
-        {
-            cNode* pnn = new cNode;
-            pnn->val = ct;
-            pnn->charr = Letter;
-            List.attach(pnn);
-        }
-        //===============
-        ct = 0;
-        Letter++;
         inFile.close();
     }
+    else { cout << "Error: Could not open file " << file << endl; }
     List.display();
     //--------FINISHED-----------
 
@@ -245,7 +251,7 @@ void main()
     // 
     //====================================================PHASE #2========================================================
 
-        //Create List For Every Letter And His Code
+    //Create List For Every Letter And His Code
     List.CodeList(List.pHead, COD);
 
     /*
@@ -256,22 +262,23 @@ void main()
 
     //HASHING
 
-    string cd, Hash;
-    int temp = 0;
+    string cd;
+    char temp = 0;
     int count = 7;
     int cnt = 0;
     int Bitt;
-    ifstream inFile(file, ios::binary);
-    if (inFile.is_open())
+    ifstream inFile2(file, ifstream::binary);
+    ofstream MyFile("Hash.txt", ofstream::binary);
+    if (inFile2.is_open())
     {
-        inFile.seekg(0, inFile.end);
-        int h = inFile.tellg();
+        inFile2.seekg(0, inFile2.end);
+        int h = inFile2.tellg();
         cout << h;
-        inFile.seekg(0, inFile.beg);
+        inFile2.seekg(0, inFile2.beg);
         char ch;
         for (int i = 0; i < h; i++)
         {
-            inFile.read(&ch, 1);
+            inFile2.read(&ch, 1);
             cNode* ptrav;
             ptrav = COD.pHead;
             while (ptrav != NULL)
@@ -293,7 +300,7 @@ void main()
                 if (count < 0)
                 {
                     count = 7;
-                    Hash += temp;
+                    MyFile.write(&temp, 1);
                     temp = 0;
                 }
             }
@@ -301,16 +308,11 @@ void main()
         }
         if (count != 7)
         {
-            Hash += temp;
+            MyFile.write(&temp, 1);
         }
-        Hash += (7 - count);
-    }
-    else { cout << "Error: Could not open file " << file << endl; }
-
-    ofstream MyFile("Hash.txt");
-    if (MyFile.is_open())
-    {
-        MyFile << Hash;
+        char Hash = (7 - count);
+        MyFile.write(&Hash, 1);
+        inFile2.close();
         MyFile.close();
     }
     else { cout << "Error: Could not open file " << file << endl; }
@@ -322,27 +324,8 @@ void main()
     ===================================================
     */
     string temp2;
-    int cut = 0;
-    ifstream inFilee(file);
-    if (inFilee.is_open())
-    {
-        int i = 0;
-        while (getline(inFilee, line))
-        {
-            if (i != 0)
-            {
-                cut++;
-            }
-            for (int k = 0; k < line.length(); k++)
-            {
-                cut++;
-            }
-            cut++;
-        }
-    }
-    ofstream DC("DC.txt");
-    int ctt = 0;
-    ifstream HashFile("Hash.txt", ios::binary);
+    ofstream DC("DC.bmp", ofstream::binary);
+    ifstream HashFile("Hash.txt", ifstream::binary);
     if (HashFile.is_open())
     {
         HashFile.seekg(0, HashFile.end);
@@ -374,11 +357,18 @@ void main()
                 ptrav = COD.pHead;
                 while (ptrav != NULL)
                 {
-                    if (temp2 == ptrav->Code && ctt <= cut)
+                    if (temp2 == ptrav->Code)
                     {
-                        DC << ptrav->charr;
+                        if (i == 2825)
+                        {
+                            int y = 1;
+                        }
+                        if (ptrav->charr == 26)
+                        {
+                            int x = 1;
+                        }
+                        DC.write(&ptrav->charr, 1);
                         temp2 = "";
-                        ctt++;
                         break;
                     }
                     ptrav = ptrav->pNext;
@@ -389,6 +379,22 @@ void main()
                 break;
             }
         }
-        DC << endl;
-    } 
+        HashFile.close();
+        DC.close();
+    }
+    ifstream DC2("DC.bmp", ifstream::binary);
+    ifstream Tr("Trail.bmp", ifstream::binary);
+    Tr.seekg(0, Tr.end);
+    int h = Tr.tellg();
+    Tr.seekg(0, Tr.beg);
+    char c1, c2;
+    for (int i = 0; i < h; i++)
+    {
+        DC2.read(&c1, 1);
+        Tr.read(&c2, 1);
+        if (c1 != c2)
+        {
+            cout << i;
+        }
+    }
 }
